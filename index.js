@@ -3,18 +3,35 @@
 //2) npx nodemon index
 
 //nodemon install! automatically restarts
-
+require("dotenv").config();
 //frame work
 const express = require("express");
+const mongoose=require("mongoose");
 
 //database
 const database=require("./database/index");
+
+//models
+const BookModel=require("./database/book");
+const AuthorModel=require("./database/author");
+const PublicationModel=require("./database/publication");
+
+
 // initializing expree
 const shapeAI=express();
 
 //CONFIGURATIONS- making server use json data
 
 shapeAI.use(express.json());
+//establish data base conn
+mongoose.connect(
+  process.env.MONGO_URL,{
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true
+}
+).then(()=>console.log("connection established!"));
 /*
 Route           /
 Description     get all books
@@ -27,7 +44,9 @@ Method          GET
 // getting all list of books array
 shapeAI.get("/", (req, res) => {
     //hello change
-    return res.json({ books: database.books });
+    //find all books , condition mobgo will match and send all obj
+    const getAllBooks=BookModel.find();
+    return res.json( getAllBooks );
   });
 
 /*
@@ -345,3 +364,23 @@ shapeAI.delete("/publication/delete/book/:isbn/:pubId", (req, res) => {
 //start server
 shapeAI.listen(3000,()=>console.log("server Running!"));
 
+//talk to mongodb
+//talk to us (js)
+//MONGOOSE
+//search mongoose -npm
+/*accept js obj ,and asynchronous
+
+//why schema?
+
+mongodb is schemaless
+
+mongoose helps u with validation(setup indepth validations), relationship with other data(user obj,post,feed,all data can be related eg:book related to author n publication)
+mongoose is only for mongodb
+
+mongoose model- represents document model of mongoDB.
+
+in website, COLLECTIONS- indivual databases in nosql dtabase is collection, book author are document.
+
+SCHEMA-> MODEL -> use them
+
+*/

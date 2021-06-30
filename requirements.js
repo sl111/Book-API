@@ -61,7 +61,7 @@ update pub details [task]//use id ofpub and update name of pub
 ***update/add new book to a publication
 
 4)DELETE
-delete a book from publication
+*** delete a book from publication
 delete a publication [task]
 */
 
