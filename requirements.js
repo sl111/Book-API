@@ -58,11 +58,12 @@ API to get list of publications based on book[task]
 
 3)PUT
 update pub details [task]//use id ofpub and update name of pub
-update new book to a publication
+***update/add new book to a publication
 
 4)DELETE
 delete a book from publication
 delete a publication
 */
 
+//how server serves the request
 

@@ -216,6 +216,38 @@ shapeAI.put("/book/author/update/:isbn", (req, res) => {
   });
 });
 
+/*
+Route           /publication/update/book
+Description     update/add new book to a publication
+Access          PUBLIC
+Parameters      isbn
+Method          PUT
+*/
+shapeAI.put("/publication/update/book/:isbn", (req, res) => {
+  // update the publication database
+  database.publications.forEach((publication) => {
+    if (publication.id === req.body.pubId) {
+      return publication.books.push(req.params.isbn);
+    }
+  });
+
+  // update the book database
+  database.books.forEach((book) => {
+    if (book.ISBN === req.params.isbn) {
+      book.publication = req.body.pubId;
+      // replacing the old publication with new
+      return;
+    }
+  });
+
+  return res.json({
+    books: database.books,
+    publications: database.publications,
+    message: "Successfully updated publication",
+  });
+});
+
+
 //start server
 shapeAI.listen(3000,()=>console.log("server Running!"));
 
