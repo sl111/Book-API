@@ -247,6 +247,100 @@ shapeAI.put("/publication/update/book/:isbn", (req, res) => {
   });
 });
 
+//...................................//
+
+/*
+Route           /book/delete
+Description     delete a book
+Access          PUBLIC
+Parameters      isbn
+Method          DELETE
+*/
+shapeAI.delete("/book/delete/:isbn", (req, res) => {
+  // if isbn doesnt match will be sent to const , matched->thrown out
+  const updatedBookDatabase = database.books.filter(
+    (book) => book.ISBN !== req.params.isbn
+  );
+
+  //(book)=> isbn gett MERN,isbn gettin PYthon , ween they dont match update
+
+  database.books = updatedBookDatabase;
+  return res.json({ books: database.books });
+});
+
+
+/*
+Route           /book/delete/author
+Description     delete a author from a book
+Access          PUBLIC
+Parameters      isbn, author id
+Method          DELETE
+*/
+shapeAI.delete("/book/delete/author/:isbn/:authorId", (req, res) => {
+  // update the book database
+  //forEach-> not deletin the whole database, jus modifying author
+  database.books.forEach((book) => {
+    if (book.ISBN === req.params.isbn) {
+      const newAuthorList = book.authors.filter(
+        (author) => author !== parseInt(req.params.authorId)
+      );
+      book.authors = newAuthorList;
+      return;
+    }
+  });
+
+  // update the author database
+  database.authors.forEach((author) => {
+    if (author.id === parseInt(req.params.authorId)) {
+      const newBooksList = author.books.filter(
+        (book) => book !== req.params.isbn
+      );
+
+      author.books = newBooksList;
+      return;
+    }
+  });
+
+  return res.json({
+    message: "author was deleted!!!!",
+    book: database.books,
+    author: database.authors,
+  });
+});
+
+/*
+Route           /publication/delete/book
+Description     delete a book from publication 
+Access          PUBLIC
+Parameters      isbn, publication id
+Method          DELETE
+*/
+shapeAI.delete("/publication/delete/book/:isbn/:pubId", (req, res) => {
+  // update publication database
+  database.publications.forEach((publication) => {
+    if (publication.id === parseInt(req.params.pubId)) {
+      const newBooksList = publication.books.filter(
+        (book) => book !== req.params.isbn
+      );
+
+      publication.books = newBooksList;
+      return;
+    }
+  });
+
+    // update book database
+    database.books.forEach((book) => {
+      if (book.ISBN === req.params.isbn) {
+        book.publication = 0; // no publication available
+        return;
+      }
+    });
+  
+    return res.json({
+      books: database.books,
+      publications: database.publications,
+    });
+  });
 
 //start server
 shapeAI.listen(3000,()=>console.log("server Running!"));

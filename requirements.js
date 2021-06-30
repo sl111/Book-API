@@ -25,8 +25,8 @@ API to get a list of book based on author [task]
 ***update/add new author
 
 4)DELETE
-delete a book
-delete a author from a book
+***delete a book
+***delete a author from a book
 
 /-------------------------------------/
 
@@ -43,7 +43,7 @@ API to get speicifc author [task]
 author details[task] //use id and update name
 
 4)DELETE
-delete an author itself
+delete an author itself[task]
 
 /-------------------------------------/
 
@@ -62,7 +62,7 @@ update pub details [task]//use id ofpub and update name of pub
 
 4)DELETE
 delete a book from publication
-delete a publication
+delete a publication [task]
 */
 
 //how server serves the request
