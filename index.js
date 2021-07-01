@@ -42,10 +42,11 @@ Method          GET
 
 // "/" ->root route , request for response
 // getting all list of books array
-shapeAI.get("/", (req, res) => {
+//ASYNCHRONOUS - asynch await
+shapeAI.get("/",async(req, res) => {
     //hello change
     //find all books , condition mobgo will match and send all obj
-    const getAllBooks=BookModel.find();
+    const getAllBooks=await BookModel.find();
     return res.json( getAllBooks );
   });
 
@@ -57,12 +58,17 @@ Parameters      isbn
 Method          GET
 */
 
-shapeAI.get("/is/:isbn", (req, res) => {
-  const getSpecificBook = database.books.filter(
+shapeAI.get("/is/:isbn", async(req, res) => {
+  const getSpecificBook=await BookModel.findOne({ISBN:req.params.isbn});
+  //ISBN acc to schema
+
+  /*const getSpecificBook = database.books.filter(
     (book) => book.ISBN === req.params.isbn
-  );
+  );*/
   //if book not available:
-  if (getSpecificBook.length === 0) {
+  //if no data -> null returned
+
+  if (!getSpecificBook) {
     return res.json({
       error: `No book found for the ISBN of ${req.params.isbn}`,
     });
@@ -81,13 +87,14 @@ Parameters      category
 Method          GET
 */
 
-shapeAI.get("/c/:category", (req, res) => {
-  const getSpecificBooks = database.books.filter((book) =>
+shapeAI.get("/c/:category", async(req, res) => {
+  const getSpecificBooks=await BookModel.findOne({category: req.params.category,});
+  /*const getSpecificBooks = database.    books.filter((book) =>
     book.category.includes(req.params.category)
-  );
+  );*/
   //includes looks into everything in array if it has only strings or num,if match found true
 
-  if (getSpecificBooks.length === 0) {
+  if (!getSpecificBooks) {
     return res.json({
       error: `No book found for the category of ${req.params.category}`,
     });
@@ -105,8 +112,9 @@ Access          PUBLIC
 Parameters      NONE
 Method          GET
 */
-shapeAI.get("/author", (req, res) => {
-  return res.json({ authors: database.authors });
+shapeAI.get("/author", async(req, res) => {
+  const getAllAuthors=await AuthorModel.find();
+  return res.json({ authors: getAllAuthors });
 }); 
 
 /*
@@ -153,10 +161,12 @@ Method          POST
 */
 
 //using req body to add all elements
-shapeAI.post("/book/new", (req, res) => {
+shapeAI.post("/book/new", async(req, res) => {
   const { newBook } = req.body;
-  database.books.push(newBook);
-  return res.json({ books: database.books, message: "book was added!" });
+  //database.books.push(newBook);
+  const addNewBook=BookModel.create(newBook);
+
+  return res.json({ books: addNewBook, message: "book was added!" });
 });
 //wen running url in browser, it performs only GET 
 //POSTMAN -> + ->paste url localhost:300-/bookpost/new-> raw->json
@@ -170,8 +180,9 @@ Method          POST
 */
 shapeAI.post("/author/new", (req, res) => {
   const { newAuthor } = req.body;
-  database.authors.push(newAuthor);
-  return res.json({ authors: database.authors, message: "author was added!" });
+  AuthorModel.create(newAuthor);
+ // database.authors.push(newAuthor);
+  return res.json({ message: "author was added!" });
 });
 
 
@@ -184,8 +195,9 @@ Method          POST
 */
 shapeAI.post("/publications/new", (req, res) => {
   const { newPublication } = req.body;
-  database.publications.push(newPublication);
-  return res.json({ publications: database.publications, message: "publication was added!" });
+  //database.publications.push(newPublication);
+  PublicationModel.create(newPublication);
+  return res.json({  message: "publication was added!" });
 });
 
 /*

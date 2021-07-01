@@ -12,13 +12,13 @@ url->request and get data
 REQUIREMENTS:
 BOOK:
 1)GET
-***need API to get all books 
-***API for specific book
-***API to get a list of books based on category
-API to get a list of book based on author [task]
+***need API to get all books ***
+***API for specific book***
+***API to get a list of books based on category***
+API to get a list of book based on author [task,db]
 
 2)POST
-***New book
+***New book***
 
 3)PUT
 ***update book details
@@ -32,9 +32,9 @@ API to get a list of book based on author [task]
 
 AUTHOR:
 1)GET
-***API to get all authors
-API to get speicifc author [task]
-***API to get list of authors based on book
+***API to get all authors***
+API to get speicifc author [task][db]
+***API to get list of authors based on book[task:db]
 
 2)POST
 ***new author
@@ -49,12 +49,12 @@ delete an author itself[task]
 
 PUBLICATION:
 1)GET
-***API to get all publication
-API to get speicifc publication [task]
-API to get list of publications based on book[task]
+***API to get all publication[db]
+API to get speicifc publication [task][db]
+API to get list of publications based on book[task][db]
 
 2)POST
-***add new publication
+***add new publication[db]
 
 3)PUT
 update pub details [task]//use id ofpub and update name of pub
