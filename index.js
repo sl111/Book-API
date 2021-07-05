@@ -207,15 +207,28 @@ Access          PUBLIC
 Parameters      isbn
 Method          PUT
 */
-shapeAI.put("/book/update/:isbn", (req, res) => {
-  database.books.forEach((book) => {
+shapeAI.put("/book/update/:isbn", async(req, res) => {
+
+  const updatedBook=await BookModel.findOneAndUpdate({ISBN:req.params.isbn,
+  },//object for find
+  {
+    //wat u need to update - title
+    title:req.body.bookTitle,
+  },
+  {
+    new:true,
+    //bcz we need new updated data to be assigned t constant
+  }
+  );
+
+  /*database.books.forEach((book) => {
     if (book.ISBN === req.params.isbn) {
       book.title = req.body.bookTitle;
       return;
     }
   });
-
-  return res.json({ books: database.books });
+  */
+  return res.json({ books: updatedBook});
 });
 
 /*
@@ -225,24 +238,52 @@ Access          PUBLIC
 Parameters      isbn
 Method          PUT
 */
-shapeAI.put("/book/author/update/:isbn", (req, res) => {
+shapeAI.put("/book/author/update/:isbn", async(req, res) => {
   // update the book database
   //pushing author id
+  const updatedBook=await BookModel.findOneAndUpdate({
+    ISBN:req.params.isbn,
+  },
+  {
+    $addToSet:{
+      authors:req.body.newAuthor,
+      //but it doesnt stop duplicates,so dont use push
+    },
+  },{
+    new:true,
+  }
+  );
+  /*
   database.books.forEach((book) => {
     if (book.ISBN === req.params.isbn)
       return book.authors.push(req.body.newAuthor);
   });
+  */
 
   // update the author database
+  const updatedAuthor=await AuthorModel.findOneAndUpdate({
+    id:req.body.newAuthor,
+  },
+  {
+    $addToSet:{
+      books:req.params.isbn,
+    },
+  },
+  {
+    new:true,
+  }
+  );
   //pushing isbn
+  /*
   database.authors.forEach((author) => {
     if (author.id === req.body.newAuthor)
       return author.books.push(req.params.isbn);
   });
+  */
 
   return res.json({
-    books: database.books,
-    authors: database.authors,
+    books: updatedBook,
+    authors: updatedAuthor,
     message: "New author was added ",
   });
 });
